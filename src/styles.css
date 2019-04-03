@@ -1,0 +1,41 @@
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+input[type='checkbox'] {
+  cursor: pointer;
+}
+
+label {
+  cursor: pointer;
+}
+
+a {
+  color: blue;
+}
+
+label.success,
+nav a.success {
+  color: green;
+  border-color: green;
+}
+
+label.error,
+nav a.error {
+  color: red;
+  border-color: red;
+}
+
+nav a {
+  text-decoration: none;
+  padding: 3px 7px;
+  border-radius: 100px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: blue;
+}
+
+nav a.current {
+  text-decoration: underline;
+}
