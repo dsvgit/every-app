@@ -1,0 +1,32 @@
+{
+  "name": "EveryApp",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "jest"
+  },
+  "dependencies": {
+    "axios": "0.18.0",
+    "classnames": "2.2.6",
+    "ramda": "0.26.1",
+    "react": "16.8.3",
+    "react-native": "0.59.3",
+    "react-native-elements": "^1.1.0",
+    "react-router": "5.0.0",
+    "react-router-native": "5.0.0",
+    "recompose": "0.30.0",
+    "shortid": "2.2.14"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.4.3",
+    "@babel/runtime": "^7.4.3",
+    "babel-jest": "^24.7.0",
+    "jest": "^24.7.0",
+    "metro-react-native-babel-preset": "^0.53.1",
+    "react-test-renderer": "16.8.3"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}
