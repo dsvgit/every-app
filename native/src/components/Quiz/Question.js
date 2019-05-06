@@ -6,38 +6,41 @@ import { View, Text, TouchableOpacity } from "react-native";
 const CheckBox = ({ checked, title, onPress, color }) => {
   return (
     <TouchableOpacity onPress={onPress}>
-      <View style={{ flexDirection: 'row'}}>
-        <Text>{checked ? ' + ' : ' - '}</Text>
+      <View style={{ flexDirection: "row" }}>
+        <Text>{checked ? " + " : " - "}</Text>
         <Text style={{ color }}>{title}</Text>
       </View>
     </TouchableOpacity>
   );
 };
 
-const Question = ({ question: q, answer, setAnswer }) => {
+const Question = ({ question, answer, setAnswer }) => {
   const isAnswered = !R.isNil(answer);
 
   return (
     <View>
-      <Text>{q.title}</Text>
+      <Text>{question.title}</Text>
       <View>
-        {R.map(
-          choice => (
-            <View key={choice.id}>
+        {R.map(choice => {
+          const color =
+            isAnswered &&
+            (answer === choice.id || question.data.correctId === choice.id) &&
+            (answer === question.data.correctId ||
+            question.data.correctId === choice.id
+              ? "green"
+              : "red");
+
+          return (
+            <View key={`${question.id}_${choice.id}`}>
               <CheckBox
                 title={choice.title}
                 checked={isAnswered && answer === choice.id}
-                onPress={() => !isAnswered && setAnswer(q.id, choice.id)}
-                color={isAnswered &&
-                (answer === choice.id || q.data.correctId === choice.id) &&
-                (answer === q.data.correctId || q.data.correctId === choice.id
-                  ? 'green'
-                  : 'red')}
+                onPress={() => !isAnswered && setAnswer(question.id, choice.id)}
+                color={color}
               />
             </View>
-          ),
-          R.values(q.data.choices)
-        )}
+          );
+        }, R.values(question.data.choices))}
       </View>
     </View>
   );

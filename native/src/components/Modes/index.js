@@ -2,6 +2,9 @@ import React from "react";
 import { withProps, compose } from "recompose";
 import { Link } from "react-router-native";
 import { View, Text } from "react-native";
+import { connect } from "react-redux";
+
+import { getData } from "src/data/duck";
 
 const Modes = ({ topic }) => {
   return (
@@ -30,6 +33,9 @@ const Modes = ({ topic }) => {
 };
 
 export default compose(
+  connect(state => ({
+    data: getData(state)
+  })),
   withProps(({ data, match }) => {
     const topicId = match.params.topicId;
 

@@ -13,9 +13,12 @@
     "react": "16.8.3",
     "react-native": "0.59.3",
     "react-native-elements": "^1.1.0",
+    "react-redux": "^7.0.2",
     "react-router": "5.0.0",
     "react-router-native": "5.0.0",
     "recompose": "0.30.0",
+    "redux": "^4.0.1",
+    "redux-thunk": "^2.3.0",
     "shortid": "2.2.14"
   },
   "devDependencies": {

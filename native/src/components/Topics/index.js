@@ -3,6 +3,9 @@ import { withProps, compose } from "recompose";
 import { Link } from "react-router-native";
 import * as R from "ramda";
 import { View, Text } from "react-native";
+import { connect } from "react-redux";
+
+import { getData } from "src/data/duck";
 
 const Topics = ({ topics }) => {
   return (
@@ -26,6 +29,9 @@ const Topics = ({ topics }) => {
 };
 
 export default compose(
+  connect(state => ({
+    data: getData(state)
+  })),
   withProps(({ data }) => ({
     topics: data.topics
   }))

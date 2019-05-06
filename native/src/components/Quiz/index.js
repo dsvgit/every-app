@@ -6,6 +6,8 @@ import { View, Text } from "react-native";
 
 import Exam from "./Exam";
 import AllQuestions from "./AllQuestions";
+import { connect } from "react-redux";
+import { getData } from "src/data/duck";
 
 const Quiz = ({
   data,
@@ -67,6 +69,9 @@ const Quiz = ({
 };
 
 export default compose(
+  connect(state => ({
+    data: getData(state)
+  })),
   withProps(({ data, match }) => {
     const topicId = match.params.topicId;
 

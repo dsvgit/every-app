@@ -1,57 +1,50 @@
-import React from 'react';
-import { NativeRouter as Router, Route } from 'react-router-native';
-import { lifecycle, withState, compose } from 'recompose';
-import axios from 'axios';
-import * as R from 'ramda';
-import { View, Text } from 'react-native';
+import React from "react";
+import { NativeRouter as Router, Route } from "react-router-native";
+import { compose, lifecycle, branch } from "recompose";
+import { Provider, connect } from "react-redux";
+import { View, Text } from "react-native";
 
-import Topics from './Topics';
-import Quiz from './Quiz';
-import Modes from './Modes';
-import { host } from './config';
+import Topics from "src/components/Topics";
+import Quiz from "src/components/Quiz";
+import Modes from "src/components/Modes";
+import { fetchData } from "src/data/duck";
+import { SUCCESS } from "src/data/constants";
+import store from "src/data/store";
 
-const AppComponent = ({ data }) => {
-  return data ? (
+const AppComponent = () => {
+  return (
     <Router>
-      <Route
-        path="/"
-        exact
-        component={props => <Topics {...props} data={data} />}
-      />
-      <Route
-        path="/modes/:topicId"
-        component={props => <Modes {...props} data={data} />}
-      />
-      <Route
-        path="/quiz/:mode/:topicId"
-        component={props => <Quiz {...props} data={data} />}
-      />
+      <Route path="/" exact component={Topics} />
+      <Route path="/modes/:topicId" component={Modes} />
+      <Route path="/quiz/:mode/:topicId" component={Quiz} />
     </Router>
-  ) : (
-    <View><Text>загрузка...</Text></View>
   );
 };
 
 const App = compose(
-  withState('data', 'setData', undefined),
-  lifecycle({
-    async componentDidMount() {
-      const { setData } = this.props;
-
-      const [topics, questions] = R.map(
-        response => response.data,
-        await Promise.all([
-          axios.get(`${host}/topics`),
-          axios.get(`${host}/questions`)
-        ])
-      );
-
-      setData({
-        topics: R.indexBy(x => x.id, topics),
-        questions: R.indexBy(x => x.id, questions)
-      });
+  connect(
+    state => ({ status: state.status }),
+    {
+      fetchData
     }
-  })
+  ),
+  lifecycle({
+    componentDidMount() {
+      this.props.fetchData();
+    }
+  }),
+  branch(
+    ({ status }) => status !== SUCCESS,
+    () => () => (
+      <View>
+        <Text>загрузка...</Text>
+      </View>
+    )
+  )
 )(AppComponent);
 
-export default App;
+export default () => (
+  <Provider store={store}>
+    <App />
+  </Provider>
+);
