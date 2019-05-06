@@ -1,13 +1,14 @@
 import React from "react";
-import { Link } from "react-router-native";
 import { withProps, withReducer, withHandlers, compose } from "recompose";
 import * as R from "ramda";
 import { View, Text } from "react-native";
 
 import Exam from "./Exam";
 import AllQuestions from "./AllQuestions";
+import Header from "src/components/Header";
 import { connect } from "react-redux";
 import { getData } from "src/data/duck";
+import ArrowBackIcon from "../ArrowBackIcon";
 
 const Quiz = ({
   data,
@@ -15,7 +16,8 @@ const Quiz = ({
   topic,
   state: { currentQuestionId, answers },
   setAnswer,
-  setCurrent
+  setCurrent,
+  history
 }) => {
   const mode = match.params.mode;
 
@@ -57,12 +59,10 @@ const Quiz = ({
 
   return (
     <View>
-      <View>
-        <Link to={`/modes/${topic.id}`}>
-          <Text>{"<"} Назад</Text>
-        </Link>
-      </View>
-      <Text>{topic.title}</Text>
+      <Header
+        title={topic.title}
+        leftComponent={<ArrowBackIcon onPress={() => history.goBack()} />}
+      />
       {content}
     </View>
   );

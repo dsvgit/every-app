@@ -1,33 +1,42 @@
 import React from "react";
 import { withProps, compose } from "recompose";
 import { Link } from "react-router-native";
-import { View, Text } from "react-native";
+import { View, Text, FlatList } from "react-native";
 import { connect } from "react-redux";
 
 import { getData } from "src/data/duck";
+import Header from "src/components/Header";
+import ArrowBackIcon from "src/components/ArrowBackIcon";
 
-const Modes = ({ topic }) => {
+const Modes = ({ topic, history }) => {
   return (
     <View>
-      <View>
-        <Link to={`/`}>
-          <Text>{"<"} Назад</Text>
-        </Link>
-      </View>
-      <Text>{topic.title}</Text>
-      <Text>Выберите режим</Text>
-      <View>
-        <View>
-          <Link to={`/quiz/exam/${topic.id}`}>
-            <Text>Экзамен</Text>
+      <Header
+        title={topic.title}
+        leftComponent={<ArrowBackIcon onPress={() => history.goBack()} />}
+      />
+      <Text>Выберите режим: </Text>
+      <FlatList
+        data={[
+          { title: "Экзамен", url: "/quiz/exam/" },
+          { title: "Все вопросы", url: "/quiz/all/" }
+        ]}
+        keyExtractor={(mode, index) => index}
+        renderItem={({ item: mode }) => (
+          <Link
+            style={{
+              flex: 1,
+              height: 40,
+              justifyContent: "center",
+              paddingHorizontal: 20
+            }}
+            key={mode.id}
+            to={`${mode.url}${topic.id}`}
+          >
+            <Text>{mode.title}</Text>
           </Link>
-        </View>
-        <View>
-          <Link to={`/quiz/all/${topic.id}`}>
-            <Text>Все вопросы</Text>
-          </Link>
-        </View>
-      </View>
+        )}
+      />
     </View>
   );
 };

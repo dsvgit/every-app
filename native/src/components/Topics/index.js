@@ -2,28 +2,30 @@ import React from "react";
 import { withProps, compose } from "recompose";
 import { Link } from "react-router-native";
 import * as R from "ramda";
-import { View, Text } from "react-native";
+import { View, Text, FlatList } from "react-native";
 import { connect } from "react-redux";
 
+import Header from "src/components/Header";
 import { getData } from "src/data/duck";
 
 const Topics = ({ topics }) => {
   return (
     <View>
-      <Text>АККРЕДИТАЦИЯ</Text>
-      <Text>Выберите специальность</Text>
-      <View>
-        {R.map(
-          topic => (
-            <View key={topic.id}>
-              <Link to={`/modes/${topic.id}`}>
-                <Text>{topic.title}</Text>
-              </Link>
-            </View>
-          ),
-          R.values(topics)
+      <Header title={"АККРЕДИТАЦИЯ"} />
+      <Text>Выберите специальность: </Text>
+      <FlatList
+        data={R.values(topics)}
+        keyExtractor={topic => topic.id}
+        renderItem={({ item: topic }) => (
+          <Link
+            style={{ flex: 1, height: 40, justifyContent: "center", paddingHorizontal: 20 }}
+            key={topic.id}
+            to={`/modes/${topic.id}`}
+          >
+            <Text>{topic.title}</Text>
+          </Link>
         )}
-      </View>
+      />
     </View>
   );
 };

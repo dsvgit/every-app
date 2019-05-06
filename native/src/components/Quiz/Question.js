@@ -3,6 +3,8 @@ import { withProps, compose } from "recompose";
 import * as R from "ramda";
 import { View, Text, TouchableOpacity } from "react-native";
 
+import { theme } from "src/theme";
+
 const CheckBox = ({ checked, title, onPress, color }) => {
   return (
     <TouchableOpacity onPress={onPress}>
@@ -27,8 +29,8 @@ const Question = ({ question, answer, setAnswer }) => {
             (answer === choice.id || question.data.correctId === choice.id) &&
             (answer === question.data.correctId ||
             question.data.correctId === choice.id
-              ? "green"
-              : "red");
+              ? theme.success
+              : theme.error);
 
           return (
             <View key={`${question.id}_${choice.id}`}>

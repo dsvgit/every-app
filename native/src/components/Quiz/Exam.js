@@ -4,6 +4,7 @@ import * as R from "ramda";
 import { View, Text, TouchableOpacity } from "react-native";
 
 import Question from "./Question";
+import { theme } from "src/theme";
 
 const Quiz = ({
   data,
@@ -29,7 +30,7 @@ const Quiz = ({
 
   return (
     <View>
-      <View style={{ flexDirection: 'row'}}>
+      <View style={{ flexDirection: "row" }}>
         {R.addIndex(R.map)((question, index) => {
           const answer = answers[question.id];
           const isAnswered = !R.isNil(answer);
@@ -52,8 +53,8 @@ const Quiz = ({
                   color:
                     isAnswered &&
                     (answer === currentQuestion.data.correctId
-                      ? "green"
-                      : "red")
+                      ? theme.success
+                      : theme.error)
                 }}
               >
                 {index + 1}
