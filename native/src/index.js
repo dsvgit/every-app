@@ -2,11 +2,12 @@ import React from "react";
 import { NativeRouter as Router, Route } from "react-router-native";
 import { compose, lifecycle, branch } from "recompose";
 import { Provider, connect } from "react-redux";
-import { View, Text } from "react-native";
+import { View } from "react-native";
 
 import Topics from "src/components/Topics";
 import Quiz from "src/components/Quiz";
 import Modes from "src/components/Modes";
+import PlainText from "src/components/PlainText";
 import { fetchData } from "src/data/duck";
 import { SUCCESS } from "src/data/constants";
 import store from "src/data/store";
@@ -37,7 +38,7 @@ const App = compose(
     ({ status }) => status !== SUCCESS,
     () => () => (
       <View>
-        <Text>загрузка...</Text>
+        <PlainText>загрузка...</PlainText>
       </View>
     )
   )

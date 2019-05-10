@@ -1,12 +1,13 @@
 import React from "react";
 import { withProps, compose } from "recompose";
 import { Link } from "react-router-native";
-import { View, Text, FlatList } from "react-native";
+import { View, FlatList } from "react-native";
 import { connect } from "react-redux";
 
 import { getData } from "src/data/duck";
 import Header from "src/components/Header";
 import ArrowBackIcon from "src/components/ArrowBackIcon";
+import PlainText from 'src/components/PlainText';
 
 const Modes = ({ topic, history }) => {
   return (
@@ -15,13 +16,13 @@ const Modes = ({ topic, history }) => {
         title={topic.title}
         leftComponent={<ArrowBackIcon onPress={() => history.goBack()} />}
       />
-      <Text>Выберите режим: </Text>
+      <PlainText>Выберите режим: </PlainText>
       <FlatList
         data={[
           { title: "Экзамен", url: "/quiz/exam/" },
           { title: "Все вопросы", url: "/quiz/all/" }
         ]}
-        keyExtractor={(mode, index) => index}
+        keyExtractor={(mode, index) => String(index)}
         renderItem={({ item: mode }) => (
           <Link
             style={{
@@ -33,7 +34,7 @@ const Modes = ({ topic, history }) => {
             key={mode.id}
             to={`${mode.url}${topic.id}`}
           >
-            <Text>{mode.title}</Text>
+            <PlainText>{mode.title}</PlainText>
           </Link>
         )}
       />

@@ -1,7 +1,7 @@
 import React from "react";
 import { withProps, withReducer, withHandlers, compose } from "recompose";
 import * as R from "ramda";
-import { View, Text } from "react-native";
+import { View } from "react-native";
 
 import Exam from "./Exam";
 import AllQuestions from "./AllQuestions";
@@ -9,6 +9,7 @@ import Header from "src/components/Header";
 import { connect } from "react-redux";
 import { getData } from "src/data/duck";
 import ArrowBackIcon from "../ArrowBackIcon";
+import PlainText from 'src/components/PlainText';
 
 const Quiz = ({
   data,
@@ -51,7 +52,7 @@ const Quiz = ({
     default: {
       content = (
         <View>
-          <Text>Неподдерживаемый режим</Text>
+          <PlainText>Неподдерживаемый режим</PlainText>
         </View>
       );
     }

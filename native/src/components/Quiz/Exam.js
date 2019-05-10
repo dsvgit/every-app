@@ -1,9 +1,10 @@
 import React from "react";
 import { withProps, lifecycle, compose } from "recompose";
 import * as R from "ramda";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 
 import Question from "./Question";
+import PlainText from 'src/components/PlainText';
 import { theme } from "src/theme";
 
 const Quiz = ({
@@ -19,7 +20,7 @@ const Quiz = ({
   if (isTopicEmpty) {
     return (
       <View>
-        <Text>По выбранной специальности нет вопросов</Text>
+        <PlainText>По выбранной специальности нет вопросов</PlainText>
       </View>
     );
   }
@@ -48,7 +49,7 @@ const Quiz = ({
                 setCurrent(question.id);
               }}
             >
-              <Text
+              <PlainText
                 style={{
                   color:
                     isAnswered &&
@@ -58,7 +59,7 @@ const Quiz = ({
                 }}
               >
                 {index + 1}
-              </Text>
+              </PlainText>
             </TouchableOpacity>
           );
         }, questions)}
@@ -80,7 +81,7 @@ const Quiz = ({
             )
           }
         >
-          <Text>Назад</Text>
+          <PlainText>Назад</PlainText>
         </TouchableOpacity>
       )}
       {R.last(questions) === currentQuestion || (
@@ -94,7 +95,7 @@ const Quiz = ({
             )
           }
         >
-          <Text>Далее</Text>
+          <PlainText>Далее</PlainText>
         </TouchableOpacity>
       )}
     </View>

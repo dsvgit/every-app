@@ -1,9 +1,10 @@
 import React from 'react';
 import { withProps, compose } from 'recompose';
 import * as R from 'ramda';
-import { View, Text } from "react-native";
+import { View } from "react-native";
 
 import Question from './Question';
+import PlainText from 'src/components/PlainText';
 
 const Quiz = ({
   data,
@@ -13,7 +14,7 @@ const Quiz = ({
   setAnswer
 }) => {
   if (isTopicEmpty) {
-    return <View><Text>По выбранной специальности нет вопросов</Text></View>;
+    return <View><PlainText>По выбранной специальности нет вопросов</PlainText></View>;
   }
 
   return (

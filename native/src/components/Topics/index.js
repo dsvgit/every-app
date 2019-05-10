@@ -2,17 +2,18 @@ import React from "react";
 import { withProps, compose } from "recompose";
 import { Link } from "react-router-native";
 import * as R from "ramda";
-import { View, Text, FlatList } from "react-native";
+import { View, FlatList } from "react-native";
 import { connect } from "react-redux";
 
 import Header from "src/components/Header";
+import PlainText from 'src/components/PlainText';
 import { getData } from "src/data/duck";
 
 const Topics = ({ topics }) => {
   return (
     <View>
       <Header title={"АККРЕДИТАЦИЯ"} />
-      <Text>Выберите специальность: </Text>
+      <PlainText>Выберите специальность: </PlainText>
       <FlatList
         data={R.values(topics)}
         keyExtractor={topic => topic.id}
@@ -22,7 +23,7 @@ const Topics = ({ topics }) => {
             key={topic.id}
             to={`/modes/${topic.id}`}
           >
-            <Text>{topic.title}</Text>
+            <PlainText>{topic.title}</PlainText>
           </Link>
         )}
       />

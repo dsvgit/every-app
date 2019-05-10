@@ -1,16 +1,17 @@
 import React from "react";
 import { withProps, compose } from "recompose";
 import * as R from "ramda";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 
 import { theme } from "src/theme";
+import PlainText from "src/components/PlainText";
 
 const CheckBox = ({ checked, title, onPress, color }) => {
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={{ flexDirection: "row" }}>
-        <Text>{checked ? " + " : " - "}</Text>
-        <Text style={{ color }}>{title}</Text>
+        <PlainText>{checked ? " + " : " - "}</PlainText>
+        <PlainText style={{ color }}>{title}</PlainText>
       </View>
     </TouchableOpacity>
   );
@@ -21,16 +22,16 @@ const Question = ({ question, answer, setAnswer }) => {
 
   return (
     <View>
-      <Text>{question.title}</Text>
+      <PlainText>{question.title}</PlainText>
       <View>
         {R.map(choice => {
-          const color =
-            isAnswered &&
-            (answer === choice.id || question.data.correctId === choice.id) &&
-            (answer === question.data.correctId ||
-            question.data.correctId === choice.id
-              ? theme.success
-              : theme.error);
+          const color = isAnswered
+            ? (answer === choice.id || question.data.correctId === choice.id) &&
+              (answer === question.data.correctId ||
+              question.data.correctId === choice.id
+                ? theme.success
+                : theme.error)
+            : undefined;
 
           return (
             <View key={`${question.id}_${choice.id}`}>
