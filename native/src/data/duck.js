@@ -3,6 +3,7 @@ import axios from "axios";
 
 import { REQUEST, SUCCESS, ERROR } from "src/data/constants";
 import { host } from "../config";
+import { combineReducers } from "redux";
 
 // constants
 
@@ -59,6 +60,8 @@ export const resetQuiz = () => ({
 
 // selectors
 
+export const getStatus = (statusId, state) =>
+  R.path(["statuses", statusId, "status"], state);
 export const getData = state => state.data;
 export const getTopic = R.curry(
   (topicId, state) => getData(state).topics[topicId]
@@ -97,47 +100,86 @@ export const isCurrentQuestionSet = state =>
 
 const defaultState = {
   data: { topics: null, questions: null },
-  error: null,
-  status: null,
+  statuses: {
+    fetchData: { status: null, error: null }
+  },
   quiz: {
     currentQuestionId: NOT_SELECTED_ID,
     answers: {}
   }
 };
 
-export default (state = defaultState, action) => {
-  const { type, payload, error } = action;
+const dataReducer = (state = defaultState.data, action) => {
+  const { type, payload } = action;
 
   switch (type) {
-    case FETCH_DATA_REQUEST: {
-      return R.mergeLeft({ status: REQUEST }, state);
-    }
     case FETCH_DATA_SUCCESS: {
-      return R.mergeLeft({ data: payload, status: SUCCESS }, state);
-    }
-    case FETCH_DATA_ERROR: {
-      return R.mergeLeft({ error, status: ERROR }, state);
-    }
-    case SET_CURRENT: {
-      const { questionId } = payload;
-      return R.set(
-        R.lensPath(["quiz", "currentQuestionId"]),
-        questionId,
-        state
-      );
-    }
-    case SET_ANSWER: {
-      const { questionId, choiceId } = payload;
-      return R.over(
-        R.lensPath(["quiz", "answers"]),
-        R.assoc(questionId, choiceId),
-        state
-      );
-    }
-    case RESET_QUIZ: {
-      return R.set(R.lensProp("quiz"), defaultState.quiz, state);
+      return {
+        topics: payload.topics,
+        questions: payload.questions
+      };
     }
     default:
       return state;
   }
 };
+
+const statusesReducer = (state = defaultState.statuses, action) => {
+  const { type, error } = action;
+
+  switch (type) {
+    case FETCH_DATA_REQUEST: {
+      return R.set(
+        R.lensProp("fetchData"),
+        { status: REQUEST, error: null },
+        state
+      );
+    }
+    case FETCH_DATA_SUCCESS: {
+      return R.set(
+        R.lensProp("fetchData"),
+        { status: SUCCESS, error: null },
+        state
+      );
+    }
+    case FETCH_DATA_ERROR: {
+      return R.set(
+        R.lensProp("fetchData"),
+        { status: ERROR, error: error },
+        state
+      );
+    }
+    default:
+      return state;
+  }
+};
+
+const quizReducer = (state = defaultState.quiz, action) => {
+  const { type, payload } = action;
+
+  switch (type) {
+    case SET_CURRENT: {
+      const { questionId } = payload;
+      return R.set(R.lensPath(["currentQuestionId"]), questionId, state);
+    }
+    case SET_ANSWER: {
+      const { questionId, choiceId } = payload;
+      return R.over(
+        R.lensPath(["answers"]),
+        R.assoc(questionId, choiceId),
+        state
+      );
+    }
+    case RESET_QUIZ: {
+      return defaultState.quiz;
+    }
+    default:
+      return state;
+  }
+};
+
+export default combineReducers({
+  data: dataReducer,
+  statuses: statusesReducer,
+  quiz: quizReducer
+});

@@ -28,6 +28,10 @@ const Exam = ({
   isCurrentQuestionSet,
   currentQuestion,
   currentQuestionId,
+  nextQuestionId,
+  prevQuestionId,
+  hasNextButton,
+  hasPrevButton,
   answers,
   setCurrent,
   history
@@ -79,25 +83,13 @@ const Exam = ({
           }, questionIds)}
         </View>
         <Question questionId={currentQuestionId} />
-        {R.head(questionIds) === currentQuestionId || (
-          <TouchableOpacity
-            onPress={() =>
-              setCurrent(
-                questionIds[R.indexOf(currentQuestionId, questionIds) - 1]
-              )
-            }
-          >
+        {hasPrevButton && (
+          <TouchableOpacity onPress={() => setCurrent(prevQuestionId)}>
             <PlainText>Назад</PlainText>
           </TouchableOpacity>
         )}
-        {R.last(questionIds) === currentQuestionId || (
-          <TouchableOpacity
-            onPress={() =>
-              setCurrent(
-                questionIds[R.indexOf(currentQuestionId, questionIds) - 1]
-              )
-            }
-          >
+        {hasNextButton && (
+          <TouchableOpacity onPress={() => setCurrent(nextQuestionId)}>
             <PlainText>Далее</PlainText>
           </TouchableOpacity>
         )}
@@ -118,15 +110,28 @@ const Exam = ({
 
 export default compose(
   connect(
-    (state, { match }) => ({
-      topic: getTopic(match.params.topicId, state),
-      isTopicEmpty: isTopicEmpty(match.params.topicId, state),
-      answers: getAnswers(state),
-      questionIds: getTopicQuestionIds(match.params.topicId, state),
-      currentQuestionId: getCurrentQuestionId(state),
-      currentQuestion: getQuestion(getCurrentQuestionId(state), state),
-      isCurrentQuestionSet: isCurrentQuestionSet(state)
-    }),
+    (state, { match }) => {
+      const questionIds = getTopicQuestionIds(match.params.topicId, state);
+      const currentQuestionId = getCurrentQuestionId(state);
+      const nextQuestionId =
+        questionIds[R.indexOf(currentQuestionId, questionIds) + 1];
+      const prevQuestionId =
+        questionIds[R.indexOf(currentQuestionId, questionIds) - 1];
+
+      return {
+        topic: getTopic(match.params.topicId, state),
+        isTopicEmpty: isTopicEmpty(match.params.topicId, state),
+        answers: getAnswers(state),
+        questionIds,
+        currentQuestionId,
+        currentQuestion: getQuestion(getCurrentQuestionId(state), state),
+        isCurrentQuestionSet: isCurrentQuestionSet(state),
+        nextQuestionId,
+        prevQuestionId,
+        hasNextButton: !R.isNil(nextQuestionId),
+        hasPrevButton: !R.isNil(prevQuestionId)
+      };
+    },
     {
       setCurrent,
       resetQuiz

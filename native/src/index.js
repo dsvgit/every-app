@@ -10,7 +10,7 @@ import Exam from "src/components/Quiz/Exam";
 import AllQuestions from "src/components/Quiz/AllQuestions";
 import Spinner from "src/components/Spinner";
 import Header from "src/components/Header";
-import { fetchData } from "src/data/duck";
+import { fetchData, getStatus } from "src/data/duck";
 import { SUCCESS } from "src/data/constants";
 import store from "src/data/store";
 
@@ -27,7 +27,9 @@ const AppComponent = () => {
 
 const App = compose(
   connect(
-    state => ({ status: state.status }),
+    state => ({
+      status: getStatus("fetchData", state)
+    }),
     {
       fetchData
     }
@@ -42,9 +44,7 @@ const App = compose(
     () => () => (
       <View style={{ flex: 1 }}>
         <Header title={"АККРЕДИТАЦИЯ"} />
-        <View
-          style={{ flex: 1, alignItems: "center", paddingTop: 48 }}
-        >
+        <View style={{ flex: 1, alignItems: "center", paddingTop: 48 }}>
           <Spinner size={48} />
         </View>
       </View>
