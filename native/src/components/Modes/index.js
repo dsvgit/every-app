@@ -1,13 +1,13 @@
 import React from "react";
-import { withProps, compose } from "recompose";
+import { compose } from "recompose";
 import { Link } from "react-router-native";
 import { View, FlatList } from "react-native";
 import { connect } from "react-redux";
 
-import { getData } from "src/data/duck";
+import { getTopic } from "src/data/duck";
 import Header from "src/components/Header";
 import ArrowBackIcon from "src/components/ArrowBackIcon";
-import PlainText from 'src/components/PlainText';
+import PlainText from "src/components/PlainText";
 
 const Modes = ({ topic, history }) => {
   return (
@@ -43,14 +43,7 @@ const Modes = ({ topic, history }) => {
 };
 
 export default compose(
-  connect(state => ({
-    data: getData(state)
-  })),
-  withProps(({ data, match }) => {
-    const topicId = match.params.topicId;
-
-    return {
-      topic: data.topics[topicId]
-    };
-  })
+  connect((state, { match }) => ({
+    topic: getTopic(match.params.topicId, state)
+  }))
 )(Modes);

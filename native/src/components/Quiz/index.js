@@ -1,21 +1,26 @@
 import React from "react";
-import { withProps, withReducer, withHandlers, compose } from "recompose";
-import * as R from "ramda";
 import { View } from "react-native";
+import * as R from "ramda";
+import { connect } from "react-redux";
 
 import Exam from "./Exam";
 import AllQuestions from "./AllQuestions";
 import Header from "src/components/Header";
-import { connect } from "react-redux";
-import { getData } from "src/data/duck";
+import {
+  setCurrent,
+  setAnswer,
+  getTopic,
+  getCurrentQuestionId,
+  getAnswers
+} from "src/data/duck";
 import ArrowBackIcon from "../ArrowBackIcon";
-import PlainText from 'src/components/PlainText';
+import PlainText from "src/components/PlainText";
 
 const Quiz = ({
-  data,
   match,
   topic,
-  state: { currentQuestionId, answers },
+  currentQuestionId,
+  answers,
   setAnswer,
   setCurrent,
   history
@@ -28,7 +33,6 @@ const Quiz = ({
     case "exam": {
       content = (
         <Exam
-          data={data}
           topic={topic}
           answers={answers}
           currentQuestionId={currentQuestionId}
@@ -40,12 +44,7 @@ const Quiz = ({
     }
     case "all": {
       content = (
-        <AllQuestions
-          data={data}
-          topic={topic}
-          answers={answers}
-          setAnswer={setAnswer}
-        />
+        <AllQuestions topic={topic} answers={answers} setAnswer={setAnswer} />
       );
       break;
     }
@@ -69,57 +68,16 @@ const Quiz = ({
   );
 };
 
-export default compose(
-  connect(state => ({
-    data: getData(state)
-  })),
-  withProps(({ data, match }) => {
-    const topicId = match.params.topicId;
-
-    return {
-      topic: data.topics[topicId]
-    };
-  }),
-  withReducer(
-    "state",
-    "dispatch",
-    (state, action) => {
-      const { type, payload } = action;
-
-      switch (type) {
-        case "SET_CURRENT": {
-          const { questionId } = payload;
-          return R.set(R.lensProp("currentQuestionId"), questionId, state);
-        }
-        case "SET_ANSWER": {
-          const { questionId, choiceId } = payload;
-          return R.over(
-            R.lensProp("answers"),
-            R.assoc(questionId, choiceId),
-            state
-          );
-        }
-        default:
-          return state;
-      }
-    },
+export default R.compose(
+  connect(
+    state => ({
+      topic: getTopic(match.params.topicId, state),
+      currentQuestionId: getCurrentQuestionId(state),
+      answers: getAnswers(state)
+    }),
     {
-      currentQuestionId: -1,
-      answers: {}
+      setCurrent,
+      setAnswer
     }
-  ),
-  withHandlers({
-    setCurrent: ({ dispatch }) => questionId => {
-      return dispatch({
-        type: "SET_CURRENT",
-        payload: { questionId }
-      });
-    },
-    setAnswer: ({ dispatch }) => (questionId, choiceId) => {
-      return dispatch({
-        type: "SET_ANSWER",
-        payload: { questionId, choiceId }
-      });
-    }
-  })
+  )
 )(Quiz);

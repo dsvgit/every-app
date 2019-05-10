@@ -1,50 +1,66 @@
-import React from 'react';
-import { withProps, compose } from 'recompose';
-import * as R from 'ramda';
+import React from "react";
+import { compose, lifecycle } from "recompose";
+import * as R from "ramda";
 import { View } from "react-native";
+import { connect } from "react-redux";
 
-import Question from './Question';
-import PlainText from 'src/components/PlainText';
-
-const Quiz = ({
-  data,
-  questionIds,
+import Question from "./Question";
+import PlainText from "src/components/PlainText";
+import ArrowBackIcon from "src/components/ArrowBackIcon";
+import Header from "src/components/Header";
+import {
+  getTopic,
+  getTopicQuestionIds,
   isTopicEmpty,
-  answers,
-  setAnswer
-}) => {
+  resetQuiz
+} from "src/data/duck";
+
+const AllQuestions = ({ topic, questionIds, isTopicEmpty, history }) => {
+  let content = null;
+
   if (isTopicEmpty) {
-    return <View><PlainText>По выбранной специальности нет вопросов</PlainText></View>;
+    content = (
+      <View>
+        <PlainText>По выбранной специальности нет вопросов</PlainText>
+      </View>
+    );
+  } else {
+    content = (
+      <View>
+        {R.map(
+          id => (
+            <Question key={id} questionId={id} />
+          ),
+          questionIds
+        )}
+      </View>
+    );
   }
 
   return (
     <View>
-      {R.map(
-        id => (
-          <Question
-            data={data}
-            answer={answers[id]}
-            setAnswer={setAnswer}
-            key={id}
-            id={id}
-          />
-        ),
-        questionIds
-      )}
+      <Header
+        title={topic.title}
+        leftComponent={<ArrowBackIcon onPress={() => history.goBack()} />}
+      />
+      {content}
     </View>
   );
 };
 
 export default compose(
-  withProps(({ data, topic }) => {
-    const questionIds = R.map(
-      x => x.id,
-      R.filter(q => q.topic.id === topic.id, R.values(data.questions))
-    );
-
-    return {
-      questionIds,
-      isTopicEmpty: R.isEmpty(questionIds)
-    };
+  connect(
+    (state, { match }) => ({
+      topic: getTopic(match.params.topicId, state),
+      questionIds: getTopicQuestionIds(match.params.topicId, state),
+      isTopicEmpty: isTopicEmpty(match.params.topicId, state)
+    }),
+    { resetQuiz }
+  ),
+  lifecycle({
+    componentWillUnmount() {
+      const { resetQuiz } = this.props;
+      resetQuiz();
+    }
   })
-)(Quiz);
+)(AllQuestions);

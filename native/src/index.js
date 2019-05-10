@@ -5,9 +5,11 @@ import { Provider, connect } from "react-redux";
 import { View } from "react-native";
 
 import Topics from "src/components/Topics";
-import Quiz from "src/components/Quiz";
 import Modes from "src/components/Modes";
-import PlainText from "src/components/PlainText";
+import Exam from "src/components/Quiz/Exam";
+import AllQuestions from "src/components/Quiz/AllQuestions";
+import Spinner from "src/components/Spinner";
+import Header from "src/components/Header";
 import { fetchData } from "src/data/duck";
 import { SUCCESS } from "src/data/constants";
 import store from "src/data/store";
@@ -17,7 +19,8 @@ const AppComponent = () => {
     <Router>
       <Route path="/" exact component={Topics} />
       <Route path="/modes/:topicId" component={Modes} />
-      <Route path="/quiz/:mode/:topicId" component={Quiz} />
+      <Route path="/quiz/exam/:topicId" component={Exam} />
+      <Route path="/quiz/all/:topicId" component={AllQuestions} />
     </Router>
   );
 };
@@ -37,8 +40,13 @@ const App = compose(
   branch(
     ({ status }) => status !== SUCCESS,
     () => () => (
-      <View>
-        <PlainText>загрузка...</PlainText>
+      <View style={{ flex: 1 }}>
+        <Header title={"АККРЕДИТАЦИЯ"} />
+        <View
+          style={{ flex: 1, alignItems: "center", paddingTop: 48 }}
+        >
+          <Spinner size={48} />
+        </View>
       </View>
     )
   )

@@ -1,10 +1,12 @@
 import React from "react";
-import { withProps, compose } from "recompose";
+import { compose } from "recompose";
 import * as R from "ramda";
 import { View, TouchableOpacity } from "react-native";
+import { connect } from "react-redux";
 
 import { theme } from "src/theme";
 import PlainText from "src/components/PlainText";
+import { getAnswer, getQuestion, setAnswer } from "src/data/duck";
 
 const CheckBox = ({ checked, title, onPress, color }) => {
   return (
@@ -50,9 +52,11 @@ const Question = ({ question, answer, setAnswer }) => {
 };
 
 export default compose(
-  withProps(({ data, id }) => {
-    return {
-      question: data.questions[id]
-    };
-  })
+  connect(
+    (state, { questionId }) => ({
+      question: getQuestion(questionId, state),
+      answer: getAnswer(questionId, state)
+    }),
+    { setAnswer }
+  )
 )(Question);
