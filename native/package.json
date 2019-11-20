@@ -9,10 +9,11 @@
   "dependencies": {
     "axios": "0.18.0",
     "classnames": "2.2.6",
+    "normalizr": "^3.4.1",
     "ramda": "0.26.1",
     "react": "16.8.3",
     "react-native": "0.59.3",
-    "react-native-elements": "^1.1.0",
+    "react-native-elements": "^1.2.7",
     "react-native-vector-icons": "^6.4.2",
     "react-redux": "^7.0.2",
     "react-router": "5.0.0",

@@ -1,9 +1,10 @@
 import * as R from "ramda";
-import axios from "axios";
 
+import request from "../request";
 import { REQUEST, SUCCESS, ERROR } from "src/data/constants";
-import { host } from "../config";
 import { combineReducers } from "redux";
+import { mapResponseToData } from "./mapping";
+import mock_data from './mock_data';
 
 // constants
 
@@ -24,22 +25,21 @@ export const fetchData = () => async dispatch => {
   dispatch({ type: FETCH_DATA_REQUEST });
 
   try {
-    const [topics, questions] = R.map(
-      response => response.data,
-      await Promise.all([
-        axios.get(`${host}/topics`),
-        axios.get(`${host}/questions`)
-      ])
-    );
+    // const response = await request.get("/api/assessments/overview-new");
+    const data = mapResponseToData(mock_data);
+
+    const { topics, questions } = data;
 
     dispatch({
       type: FETCH_DATA_SUCCESS,
       payload: {
-        topics: R.indexBy(x => x.id, topics),
-        questions: R.indexBy(x => x.id, questions)
+        topics,
+        questions
       }
     });
   } catch (error) {
+    console.log("error");
+    console.log(error);
     dispatch({ type: FETCH_DATA_ERROR, error });
   }
 };

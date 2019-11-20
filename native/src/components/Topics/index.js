@@ -12,7 +12,7 @@ import { getData } from "src/data/duck";
 const Topics = ({ topics }) => {
   return (
     <View>
-      <Header title={"АККРЕДИТАЦИЯ"} />
+      <Header title={"EVERYKA APP"} />
       <PlainText>Выберите специальность: </PlainText>
       <FlatList
         data={R.values(topics)}

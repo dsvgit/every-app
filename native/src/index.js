@@ -43,7 +43,7 @@ const App = compose(
     ({ status }) => status !== SUCCESS,
     () => () => (
       <View style={{ flex: 1 }}>
-        <Header title={"АККРЕДИТАЦИЯ"} />
+        <Header title={"EVERYKA APP"} />
         <View style={{ flex: 1, alignItems: "center", paddingTop: 48 }}>
           <Spinner size={48} />
         </View>
