@@ -1,7 +1,7 @@
 import React from "react";
 import { compose, lifecycle } from "recompose";
 import * as R from "ramda";
-import { View } from "react-native";
+import {FlatList, View} from "react-native";
 import { connect } from "react-redux";
 
 import Question from "./Question";
@@ -26,19 +26,18 @@ const AllQuestions = ({ topic, questionIds, isTopicEmpty, history }) => {
     );
   } else {
     content = (
-      <View>
-        {R.map(
-          id => (
-            <Question key={id} questionId={id} />
-          ),
-          questionIds
+      <FlatList
+        data={questionIds}
+        keyExtractor={id => id}
+        renderItem={({ item: id }) => (
+          <Question key={id} questionId={id} />
         )}
-      </View>
+      />
     );
   }
 
   return (
-    <View>
+    <View style={{flex: 1}}>
       <Header
         title={topic.title}
         leftComponent={<ArrowBackIcon onPress={() => history.goBack()} />}

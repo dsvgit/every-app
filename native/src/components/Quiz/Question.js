@@ -3,6 +3,7 @@ import { compose } from "recompose";
 import * as R from "ramda";
 import { View, TouchableOpacity } from "react-native";
 import { connect } from "react-redux";
+import { CheckBox as CheckBoxElements } from "react-native-elements";
 
 import { theme } from "src/theme";
 import PlainText from "src/components/PlainText";
@@ -10,12 +11,14 @@ import { getAnswer, getQuestion, setAnswer } from "src/data/duck";
 
 const CheckBox = ({ checked, title, onPress, color }) => {
   return (
-    <TouchableOpacity onPress={onPress}>
-      <View style={{ flexDirection: "row" }}>
-        <PlainText>{checked ? " + " : " - "}</PlainText>
-        <PlainText style={{ color }}>{title}</PlainText>
-      </View>
-    </TouchableOpacity>
+    <CheckBoxElements
+      checked={checked}
+      title={title}
+      onPress={onPress}
+      checkedColor={color}
+      uncheckedColor={color}
+      textStyle={{color}}
+    />
   );
 };
 
@@ -24,7 +27,9 @@ const Question = ({ question, answer, setAnswer }) => {
 
   return (
     <View>
-      <PlainText>{question.title}</PlainText>
+      <PlainText style={{ padding: 10, fontSize: 18 }}>
+        {question.title}
+      </PlainText>
       <View>
         {R.map(choice => {
           const color = isAnswered

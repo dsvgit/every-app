@@ -1,30 +1,28 @@
 import React from "react";
 import { withProps, compose } from "recompose";
-import { Link } from "react-router-native";
 import * as R from "ramda";
 import { View, FlatList } from "react-native";
 import { connect } from "react-redux";
+import { ListItem } from 'react-native-elements'
 
 import Header from "src/components/Header";
-import PlainText from 'src/components/PlainText';
 import { getData } from "src/data/duck";
 
-const Topics = ({ topics }) => {
+const Topics = ({ topics, history }) => {
   return (
-    <View>
+    <View style={{flex: 1}}>
       <Header title={"EVERYKA APP"} />
-      <PlainText>Выберите специальность: </PlainText>
       <FlatList
         data={R.values(topics)}
         keyExtractor={topic => topic.id}
         renderItem={({ item: topic }) => (
-          <Link
-            style={{ flex: 1, height: 40, justifyContent: "center", paddingHorizontal: 20 }}
+          <ListItem
             key={topic.id}
-            to={`/modes/${topic.id}`}
-          >
-            <PlainText>{topic.title}</PlainText>
-          </Link>
+            title={topic.title}
+            onPress={() => history.push(`/modes/${topic.id}`)}
+            chevron
+            bottomDivider
+          />
         )}
       />
     </View>
